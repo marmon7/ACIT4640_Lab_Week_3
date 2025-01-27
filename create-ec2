@@ -29,14 +29,15 @@ aws ec2 authorize-security-group-ingress --group-id $security_group_id \
 
 # Launch an EC2 instance in the public subnet
 # COMPLETE THIS PART
-instance_id=$(aws ec2 run-instances 
---image-id $ubuntu_ami
---count 1 
---instance-type t2.micro 
---key-name $key_name
---security-group-ids $security_group_id
---subnet-id $subnet_id
---query 'Instances[0].InstanceId'
+instance_id=$(aws ec2 run-instances \
+--image-id $ubuntu_ami \
+--count 1 \
+--instance-type t2.micro \
+--key-name $key_name \
+--security-group-ids $security_group_id \
+--subnet-id $subnet_id \
+--query 'Instances[0].InstanceId' \
+--associate-public-ip-address \
 --output text)
 
 # wait for ec2 instance to be running
@@ -44,11 +45,12 @@ aws ec2 wait instance-running --instance-ids $instance_id
 
 # Get the public IP address of the EC2 instance
 # COMPLETE THIS PART
-public_ip=$(aws ec2 describe-instances 
+public_ip=$(aws ec2 describe-instances \
 --instance-ids $instance_id \
 --query 'Reservations[*].Instances[*].PublicIpAddress' \
 --output text)
 
 # Write instance data to a file
 # COMPLETE THIS PART
-echo "Public IP: $public_ip" 
+echo "ec2_Public_IP=${public_ip}" >> infrastructure_data
+
